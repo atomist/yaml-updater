@@ -1,7 +1,7 @@
 {
   "name": "@atomist/yaml-updater",
-  "description": "utilities for creating Slack messages",
-  "version": "0.1.0",
+  "description": "update to YAML documents producing clean diffs",
+  "version": "0.2.0",
   "author": "Atomist",
   "license": "Apache-2.0",
   "homepage": "https://github.com/atomist/yaml-updater#readme",
