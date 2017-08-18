@@ -5,11 +5,13 @@
 [Node][node] [TypeScript][ts]
 module [`@atomist/yaml-updater`][yaml-updater] for creating clean
 changes to YAML files producing reasonable diffs from the original.
-This module was developed for you with [Rug][docs]
+This module was originally developed for use
+with [Atomist][www] [Rugs][docs].
 
 [node]: https://nodejs.org/
 [ts]: https://www.typescriptlang.org/
 [yaml-updater]: https://www.npmjs.com/package/@atomist/yaml-updater
+[www]: https://www.atomist.com/
 [docs]: http://docs.atomist.com/
 
 ## Using
