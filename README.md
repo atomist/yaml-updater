@@ -15,6 +15,48 @@ This module was developed for you with [Rug][docs]
 
 ## Using
 
+Each function is documented using [TypeDoc][typedoc] in
+the [source][].  The [tests][] are pretty complete and a great source
+of examples for what functions are available and how to use them.
+
+In general, updating a property value adds property and value if it
+does not exist.  If the property does exist in the original YAML, its
+value will be updated.  If its current value is an object, the value
+will be recursively updated, resulting in nested properties being
+add/updated without affecting elements of the original YAML that do
+not appear in the updates.
+
+Most functions take an optional last `options` parameter that is an
+object.  Currently the only used parameter in the `options` object is
+"keepArrayIndent".  If the value of that property is true, the
+resulting YAML will have arrays indented compared to their parent
+object.  If the value is false, the indentation of the array will be
+at the same level as its parent object.  For example, if
+`keepArrayIndent: true`, you will get
+
+```yaml
+parent:
+  - first array item
+  - second array item
+```
+
+while if `keepArrayIndent: false`, you will get
+
+```yaml
+parent:
+- first array item
+- second array item
+```
+
+Both are valid YAML and equivalent representation of the same data
+structure.  Note that only arrays that are updated in some way will be
+modified, so we recommend you base the value for this option on the
+format of the original YAML document you are updating.
+
+[typedoc]: http://typedoc.org/ (TypeDoc)
+[source]: src/Yaml.ts (yaml-updater Source Code)
+[tests]: src/YamlTest.ts (yaml-updater Tests)
+
 ## Support
 
 General support questions should be discussed in the `#support`
