@@ -1,7 +1,6 @@
 # @atomist/yaml-updater
 
 [![Build Status](https://travis-ci.org/atomist/yaml-updater.svg?branch=master)](https://travis-ci.org/atomist/yaml-updater)
-[![Slack Status](https://join.atomist.com/badge.svg)](https://join.atomist.com/)
 
 [Node][node] [TypeScript][ts]
 module [`@atomist/yaml-updater`][yaml-updater] for creating clean
