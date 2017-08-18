@@ -1,0 +1,49 @@
+{
+  "name": "@atomist/yaml-updater",
+  "description": "utilities for creating Slack messages",
+  "version": "0.9.0",
+  "author": "Atomist",
+  "license": "Apache-2.0",
+  "homepage": "https://github.com/atomist/yaml-updater#readme",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/atomist/yaml-updater.git"
+  },
+  "keywords": [
+    "atomist",
+    "rug",
+    "slack"
+  ],
+  "bugs": {
+    "url": "https://github.com/atomist/yaml-updater/issues"
+  },
+  "dependencies": {
+    "js-yaml": "^3.9.1",
+    "lodash": "^4.17.4"
+  },
+  "devDependencies": {
+    "@types/js-yaml": "^3.9.1",
+    "@types/lodash": "^4.14.73",
+    "@types/mocha": "^2.2.41",
+    "@types/power-assert": "^1.4.29",
+    "espower-typescript": "^8.0.0",
+    "mocha": "^3.4.2",
+    "power-assert": "^1.4.4",
+    "supervisor": "^0.12.0",
+    "tslint": "^5.6.0",
+    "typescript": "^2.3.2"
+  },
+  "directories": {
+    "test": "test"
+  },
+  "scripts": {
+    "autotest": "supervisor -q -n exit -x npm -- test",
+    "clean": "npm run clean-js ; rm -rf build",
+    "clean-js": "find src test -type f -name '*.js' -print0 | xargs -0 rm -f",
+    "compile": "tsc -p .",
+    "distclean": "npm run clean ; rm -rf node_modules",
+    "lint": "tslint '**/*.ts' --exclude 'node_modules/**' --exclude 'build/**' -t verbose",
+    "lint-fix": "npm run lint -- --fix",
+    "test": "mocha --compilers ts:espower-typescript/guess 'test/**/*.ts'"
+  }
+}
