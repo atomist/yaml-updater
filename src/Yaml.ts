@@ -161,8 +161,9 @@ export function updateYamlKey(
                     throw new Error(`failed to match key ${key} in current YAML: ${updatedYaml}`);
                 }
                 const keyObject = keyMatches[2];
-                // remove indentation
-                const indentMatches = /(?:^|\n)(\s+)[^\-#\s]/.exec(keyObject);
+                // find first properly indented line
+                const indentationRegExp = /^( +)[^\-#\s]/m;
+                const indentMatches = indentationRegExp.exec(keyObject);
                 if (!indentMatches) {
                     throw new Error(`failed to match indentation for elements of key ${key}: ${keyObject}`);
                 }

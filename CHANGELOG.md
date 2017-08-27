@@ -9,6 +9,12 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 [Unreleased]: https://github.com/atomist/yaml-updater/compare/0.7.0...HEAD
 
+### Fixed
+
+-   Updating object value having empty first line [#1][1]
+
+[1]: https://github.com/atomist/yaml-updater/issues/1
+
 ## [0.1.0] - 2017-08-18
 
 Initial release

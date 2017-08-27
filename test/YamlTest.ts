@@ -27,220 +27,226 @@ import {
 
 describe("Yaml", () => {
 
-    it("should properly format a YAML key value", () => {
-        assert(formatYamlKey("artist", "Arcade Fire") === "artist: Arcade Fire\n");
-    });
+    describe("formatYamlKey", () => {
 
-    it("should properly format a YAML array", () => {
-        const albums = ["Funeral", "Neon Bible", "The Suburbs", "Reflektor"];
-        const expected = `albums:
+        it("should properly format a YAML key value", () => {
+            assert(formatYamlKey("artist", "Arcade Fire") === "artist: Arcade Fire\n");
+        });
+
+        it("should properly format a YAML array", () => {
+            const albums = ["Funeral", "Neon Bible", "The Suburbs", "Reflektor"];
+            const expected = `albums:
 - Funeral
 - Neon Bible
 - The Suburbs
 - Reflektor
 `;
-        assert(formatYamlKey("albums", albums) === expected);
-    });
+            assert(formatYamlKey("albums", albums) === expected);
+        });
 
-    it("should properly indent a YAML array", () => {
-        const albums = ["Funeral", "Neon Bible", "The Suburbs", "Reflektor"];
-        const expected = `albums:
+        it("should properly indent a YAML array", () => {
+            const albums = ["Funeral", "Neon Bible", "The Suburbs", "Reflektor"];
+            const expected = `albums:
   - Funeral
   - Neon Bible
   - The Suburbs
   - Reflektor
 `;
-        const options = { keepArrayIndent: true };
-        assert(formatYamlKey("albums", albums, options) === expected);
+            const options = { keepArrayIndent: true };
+            assert(formatYamlKey("albums", albums, options) === expected);
+        });
+
     });
 
-    it("should add a key with a string value to an empty string", () => {
-        const original = "";
-        const expected = "artist: Arcade Fire\n";
-        const value = "Arcade Fire";
-        assert(updateYamlKey("artist", value, original) === expected);
-    });
+    describe("updateYamlKey", () => {
 
-    it("should update a key with a string value", () => {
-        const original = "artist: Unknown\n";
-        const expected = "artist: Arcade Fire\n";
-        const value = "Arcade Fire";
-        assert(updateYamlKey("artist", value, original) === expected);
-    });
+        it("should add a key with a string value to an empty string", () => {
+            const original = "";
+            const expected = "artist: Arcade Fire\n";
+            const value = "Arcade Fire";
+            assert(updateYamlKey("artist", value, original) === expected);
+        });
 
-    it("should update a key without newline with a string value", () => {
-        const original = "artist: Unknown";
-        const expected = "artist: Arcade Fire\n";
-        const value = "Arcade Fire";
-        assert(updateYamlKey("artist", value, original) === expected);
-    });
+        it("should update a key with a string value", () => {
+            const original = "artist: Unknown\n";
+            const expected = "artist: Arcade Fire\n";
+            const value = "Arcade Fire";
+            assert(updateYamlKey("artist", value, original) === expected);
+        });
 
-    it("should update a key with a string value respecting lines and comments", () => {
-        const original = `
+        it("should update a key without newline with a string value", () => {
+            const original = "artist: Unknown";
+            const expected = "artist: Arcade Fire\n";
+            const value = "Arcade Fire";
+            assert(updateYamlKey("artist", value, original) === expected);
+        });
+
+        it("should update a key with a string value respecting lines and comments", () => {
+            const original = `
 # not unknown
 artist: Unknown
 
 `;
-        const expected = `
+            const expected = `
 # not unknown
 artist: Arcade Fire
 `;
-        const value = "Arcade Fire";
-        assert(updateYamlKey("artist", value, original) === expected);
-    });
+            const value = "Arcade Fire";
+            assert(updateYamlKey("artist", value, original) === expected);
+        });
 
-    it("should not change the format of a value", () => {
-        const original = `artist: "Arcade Fire"\n`;
-        const value = "Arcade Fire";
-        assert(updateYamlKey("artist", value, original) === original);
-    });
+        it("should not change the format of a value", () => {
+            const original = `artist: "Arcade Fire"\n`;
+            const value = "Arcade Fire";
+            assert(updateYamlKey("artist", value, original) === original);
+        });
 
-    it("should add a key with a string value", () => {
-        const original = "label: Merge Records\n";
-        const expected = `label: Merge Records
+        it("should add a key with a string value", () => {
+            const original = "label: Merge Records\n";
+            const expected = `label: Merge Records
 artist: Arcade Fire
 `;
-        const value = "Arcade Fire";
-        assert(updateYamlKey("artist", value, original) === expected);
-    });
+            const value = "Arcade Fire";
+            assert(updateYamlKey("artist", value, original) === expected);
+        });
 
-    it("should add a key with a string value respecting empty lines and comments", () => {
-        const original = `
+        it("should add a key with a string value respecting empty lines and comments", () => {
+            const original = `
 
 label: Merge Records
 
 # who is on this label?
 
 `;
-        const expected = `
+            const expected = `
 
 label: Merge Records
 
 # who is on this label?
 artist: Arcade Fire
 `;
-        const value = "Arcade Fire";
-        assert(updateYamlKey("artist", value, original) === expected);
-    });
+            const value = "Arcade Fire";
+            assert(updateYamlKey("artist", value, original) === expected);
+        });
 
-    it("should add a key without a newline with a string value", () => {
-        const original = "label: Merge Records";
-        const expected = `label: Merge Records
+        it("should add a key without a newline with a string value", () => {
+            const original = "label: Merge Records";
+            const expected = `label: Merge Records
 artist: Arcade Fire
 `;
-        const value = "Arcade Fire";
-        assert(updateYamlKey("artist", value, original) === expected);
-    });
+            const value = "Arcade Fire";
+            assert(updateYamlKey("artist", value, original) === expected);
+        });
 
-    it("should delete a key with a string value", () => {
-        const original = `label: Merge Records
+        it("should delete a key with a string value", () => {
+            const original = `label: Merge Records
 artist: Arcade Fire
 `;
-        const expected = "label: Merge Records\n";
-        const value = null;
-        assert(updateYamlKey("artist", value, original) === expected);
-    });
+            const expected = "label: Merge Records\n";
+            const value = null;
+            assert(updateYamlKey("artist", value, original) === expected);
+        });
 
-    it("should delete a key with a false value", () => {
-        const original = `label: false
+        it("should delete a key with a false value", () => {
+            const original = `label: false
 artist: Arcade Fire
 `;
-        const expected = "artist: Arcade Fire\n";
-        const value = null;
-        assert(updateYamlKey("label", value, original) === expected);
-    });
+            const expected = "artist: Arcade Fire\n";
+            const value = null;
+            assert(updateYamlKey("label", value, original) === expected);
+        });
 
-    it("should update a key preserving empty lines and comments", () => {
-        const original = "# comment\nartist: Arcade File\n\nlabel: Merge Records\n";
-        const expected = "# comment\nartist: Arcade File\n\nlabel: Sonovox\n";
-        const value = "Sonovox";
-        assert(updateYamlKey("label", value, original) === expected);
-    });
+        it("should update a key preserving empty lines and comments", () => {
+            const original = "# comment\nartist: Arcade File\n\nlabel: Merge Records\n";
+            const expected = "# comment\nartist: Arcade File\n\nlabel: Sonovox\n";
+            const value = "Sonovox";
+            assert(updateYamlKey("label", value, original) === expected);
+        });
 
-    it("should update a key with an array value", () => {
-        const original = `albums:
+        it("should update a key with an array value", () => {
+            const original = `albums:
 - Funeral
 - Neon Bible
 - The Suburbs
 - Reflektor
 `;
-        const expected = `albums:
+            const expected = `albums:
 - Funeral
 - Neon Bible
 - The Suburbs
 - Reflektor
 - Everything Now
 `;
-        const value = ["Funeral", "Neon Bible", "The Suburbs", "Reflektor", "Everything Now"];
-        assert(updateYamlKey("albums", value, original) === expected);
-    });
+            const value = ["Funeral", "Neon Bible", "The Suburbs", "Reflektor", "Everything Now"];
+            assert(updateYamlKey("albums", value, original) === expected);
+        });
 
-    it("should add a key with an array value", () => {
-        const original = "artist: Arcade Fire\n";
-        const expected = `artist: Arcade Fire
+        it("should add a key with an array value", () => {
+            const original = "artist: Arcade Fire\n";
+            const expected = `artist: Arcade Fire
 albums:
 - Funeral
 - Neon Bible
 - The Suburbs
 - Reflektor
 `;
-        const value = ["Funeral", "Neon Bible", "The Suburbs", "Reflektor"];
-        assert(updateYamlKey("albums", value, original) === expected);
-    });
+            const value = ["Funeral", "Neon Bible", "The Suburbs", "Reflektor"];
+            assert(updateYamlKey("albums", value, original) === expected);
+        });
 
-    it("should add a key without a newline with an array value", () => {
-        const original = "artist: Arcade Fire";
-        const expected = `artist: Arcade Fire
+        it("should add a key without a newline with an array value", () => {
+            const original = "artist: Arcade Fire";
+            const expected = `artist: Arcade Fire
 albums:
 - Funeral
 - Neon Bible
 - The Suburbs
 - Reflektor
 `;
-        const value = ["Funeral", "Neon Bible", "The Suburbs", "Reflektor"];
-        assert(updateYamlKey("albums", value, original) === expected);
-    });
+            const value = ["Funeral", "Neon Bible", "The Suburbs", "Reflektor"];
+            assert(updateYamlKey("albums", value, original) === expected);
+        });
 
-    it("should delete a key with an array value", () => {
-        const original = `artist: Arcade Fire
+        it("should delete a key with an array value", () => {
+            const original = `artist: Arcade Fire
 albums:
 - Funeral
 - Neon Bible
 - The Suburbs
 - Reflektor
 `;
-        const expected = "artist: Arcade Fire\n";
-        const value = null;
-        assert(updateYamlKey("albums", value, original) === expected);
-    });
+            const expected = "artist: Arcade Fire\n";
+            const value = null;
+            assert(updateYamlKey("albums", value, original) === expected);
+        });
 
-    it("should delete a key with an indented array value", () => {
-        const original = `artist: Arcade Fire
+        it("should delete a key with an indented array value", () => {
+            const original = `artist: Arcade Fire
 albums:
   - Funeral
   - Neon Bible
   - The Suburbs
   - Reflektor
 `;
-        const expected = "artist: Arcade Fire\n";
-        const value = null;
-        assert(updateYamlKey("albums", value, original) === expected);
-    });
+            const expected = "artist: Arcade Fire\n";
+            const value = null;
+            assert(updateYamlKey("albums", value, original) === expected);
+        });
 
-    it("should update an object with a string", () => {
-        const original = `albums:
+        it("should update an object with a string", () => {
+            const original = `albums:
   Funeral: 2004
   Neon Bible: 2007
   The Suburbs: 2010
   Reflektor: 2013
 `;
-        const expected = "albums: 'Funeral, Neon Bible, The Suburbs, Reflektor'\n";
-        const value = "Funeral, Neon Bible, The Suburbs, Reflektor";
-        assert(updateYamlKey("albums", value, original) === expected);
-    });
+            const expected = "albums: 'Funeral, Neon Bible, The Suburbs, Reflektor'\n";
+            const value = "Funeral, Neon Bible, The Suburbs, Reflektor";
+            assert(updateYamlKey("albums", value, original) === expected);
+        });
 
-    it("should add to an object", () => {
-        const original = `artist: Arcade Fire
+        it("should add to an object", () => {
+            const original = `artist: Arcade Fire
 albums:
   Funeral: 2004
   Neon Bible: 2007
@@ -248,7 +254,7 @@ albums:
   Reflektor: 2013
 label: Merge Records
 `;
-        const expected = `artist: Arcade Fire
+            const expected = `artist: Arcade Fire
 albums:
   Funeral: 2004
   Neon Bible: 2007
@@ -257,12 +263,12 @@ albums:
   Everything Now: 2017
 label: Merge Records
 `;
-        const value = { "Everything Now": 2017 };
-        assert(updateYamlKey("albums", value, original) === expected);
-    });
+            const value = { "Everything Now": 2017 };
+            assert(updateYamlKey("albums", value, original) === expected);
+        });
 
-    it("should update part of an object", () => {
-        const original = `artist: Arcade Fire
+        it("should update part of an object", () => {
+            const original = `artist: Arcade Fire
 albums:
   Funeral: 2004
   Neon Bible: 2007
@@ -271,7 +277,7 @@ albums:
   Everything Now: 2017
 label: Merge Records
 `;
-        const expected = `artist: Arcade Fire
+            const expected = `artist: Arcade Fire
 albums:
   Funeral: 2004
   Neon Bible: 2007
@@ -280,12 +286,12 @@ albums:
   Everything Now: 2017
 label: Merge Records
 `;
-        const value = { "The Suburbs": 2010 };
-        assert(updateYamlKey("albums", value, original) === expected);
-    });
+            const value = { "The Suburbs": 2010 };
+            assert(updateYamlKey("albums", value, original) === expected);
+        });
 
-    it("should delete an object", () => {
-        const original = `artist: Arcade Fire
+        it("should delete an object", () => {
+            const original = `artist: Arcade Fire
 albums:
   Funeral: 2004
   Neon Bible: 2007
@@ -294,15 +300,15 @@ albums:
   Everything Now: 2017
 label: Merge Records
 `;
-        const expected = `artist: Arcade Fire
+            const expected = `artist: Arcade Fire
 label: Merge Records
 `;
-        const value = null;
-        assert(updateYamlKey("albums", value, original) === expected);
-    });
+            const value = null;
+            assert(updateYamlKey("albums", value, original) === expected);
+        });
 
-    it("should delete a nested object", () => {
-        const original = `artist: Arcade Fire
+        it("should delete a nested object", () => {
+            const original = `artist: Arcade Fire
 albums:
   Arcade Fire: 2003
   Funeral: 2004
@@ -312,7 +318,7 @@ albums:
   Everything Now: 2017
 label: Merge Records
 `;
-        const expected = `artist: Arcade Fire
+            const expected = `artist: Arcade Fire
 albums:
   Funeral: 2004
   Neon Bible: 2007
@@ -321,12 +327,12 @@ albums:
   Everything Now: 2017
 label: Merge Records
 `;
-        const value = { "Arcade Fire": null };
-        assert(updateYamlKey("albums", value, original) === expected);
-    });
+            const value = { "Arcade Fire": null };
+            assert(updateYamlKey("albums", value, original) === expected);
+        });
 
-    it("should add to an object respecting comments and empty lines", () => {
-        const original = `# first line
+        it("should add to an object respecting comments and empty lines", () => {
+            const original = `# first line
 artist: Arcade Fire
 
 albums:
@@ -339,7 +345,7 @@ albums:
 
 label: Merge Records
 `;
-        const expected = `# first line
+            const expected = `# first line
 artist: Arcade Fire
 
 albums:
@@ -351,12 +357,12 @@ albums:
   Everything Now: 2017
 label: Merge Records
 `;
-        const value = { "Everything Now": 2017 };
-        assert(updateYamlKey("albums", value, original) === expected);
-    });
+            const value = { "Everything Now": 2017 };
+            assert(updateYamlKey("albums", value, original) === expected);
+        });
 
-    it("should update part of an object respecting comments and empty lines", () => {
-        const original = `# first line
+        it("should update part of an object respecting comments and empty lines", () => {
+            const original = `# first line
 artist: Arcade Fire
 
 albums:
@@ -370,7 +376,7 @@ albums:
 
 label: Merge Records
 `;
-        const expected = `# first line
+            const expected = `# first line
 artist: Arcade Fire
 
 albums:
@@ -384,12 +390,12 @@ albums:
 
 label: Merge Records
 `;
-        const value = { "The Suburbs": 2010 };
-        assert(updateYamlKey("albums", value, original) === expected);
-    });
+            const value = { "The Suburbs": 2010 };
+            assert(updateYamlKey("albums", value, original) === expected);
+        });
 
-    it("should delete an object respecting comments and empty lines", () => {
-        const original = `# first line
+        it("should delete an object respecting comments and empty lines", () => {
+            const original = `# first line
 artist: Arcade Fire
 
 albums:
@@ -403,17 +409,17 @@ albums:
 
 label: Merge Records
 `;
-        const expected = `# first line
+            const expected = `# first line
 artist: Arcade Fire
 
 label: Merge Records
 `;
-        const value = null;
-        assert(updateYamlKey("albums", value, original) === expected);
-    });
+            const value = null;
+            assert(updateYamlKey("albums", value, original) === expected);
+        });
 
-    it("should delete a nested object respecting comments and empty lines", () => {
-        const original = `# first line
+        it("should delete a nested object respecting comments and empty lines", () => {
+            const original = `# first line
 artist: Arcade Fire
 
 albums:
@@ -428,7 +434,7 @@ albums:
 
 label: Merge Records
 `;
-        const expected = `# first line
+            const expected = `# first line
 artist: Arcade Fire
 
 albums:
@@ -442,34 +448,94 @@ albums:
 
 label: Merge Records
 `;
-        const value = { "Arcade Fire": null };
-        assert(updateYamlKey("albums", value, original) === expected);
+            const value = { "Arcade Fire": null };
+            assert(updateYamlKey("albums", value, original) === expected);
+        });
+
+        it("should update object with embedded newlines", () => {
+            const orig = `notify:
+
+  webhooks:
+  - url: https://somedomain.com
+`;
+            const updates = {
+                webhooks: [
+                    { url: "https://somedomain.com" },
+                    { url: "https://otherdomain.com" },
+                ],
+            };
+            const expected = `notify:
+
+  webhooks:
+  - url: 'https://somedomain.com'
+  - url: 'https://otherdomain.com'
+`;
+            assert(updateYamlKey("notify", updates, orig) === expected);
+        });
+
+        it("should delete object with embedded newlines", () => {
+            const orig = `kanye: west
+notify:
+
+  webhooks:
+  - url: https://somedomain.com
+`;
+            const expected = `kanye: west\n`;
+            assert(updateYamlKey("notify", null, orig) === expected);
+        });
+
     });
 
-    it("should add a key with a string value to an empty document", () => {
-        const orig = "";
-        const updates = { artist: "Arcade Fire" };
-        const expected = "artist: Arcade Fire\n";
-        assert(updateYamlDocument(updates, orig) === expected);
-        assert(updateYamlDocumentWithString(JSON.stringify(updates), orig) === expected);
-    });
+    describe("updateYamlDocument", () => {
 
-    it("should update a false value", () => {
-        const orig = `dist: trusty
+        it("should add a key with a string value to an empty document", () => {
+            const orig = "";
+            const updates = { artist: "Arcade Fire" };
+            const expected = "artist: Arcade Fire\n";
+            assert(updateYamlDocument(updates, orig) === expected);
+            assert(updateYamlDocumentWithString(JSON.stringify(updates), orig) === expected);
+        });
+
+        it("should update a false value", () => {
+            const orig = `dist: trusty
 sudo: false
 language: java
 `;
-        const updates = { sudo: "required" };
-        const expected = `dist: trusty
+            const updates = { sudo: "required" };
+            const expected = `dist: trusty
 sudo: required
 language: java
 `;
-        assert(updateYamlDocument(updates, orig) === expected);
-        assert(updateYamlDocumentWithString(JSON.stringify(updates), orig) === expected);
-    });
+            assert(updateYamlDocument(updates, orig) === expected);
+            assert(updateYamlDocumentWithString(JSON.stringify(updates), orig) === expected);
+        });
 
-    it("should update the Travis CI config", () => {
-        const orig = `dist: trusty
+        it("should update objects with embedded newlines", () => {
+            const orig = `notify:
+
+  webhooks:
+  - url: https://somedomain.com
+`;
+            const updates = {
+                notify: {
+                    webhooks: [
+                        { url: "https://somedomain.com" },
+                        { url: "https://otherdomain.com" },
+                    ],
+                },
+            };
+            const expected = `notify:
+
+  webhooks:
+  - url: 'https://somedomain.com'
+  - url: 'https://otherdomain.com'
+`;
+            assert(updateYamlDocument(updates, orig) === expected);
+            assert(updateYamlDocumentWithString(JSON.stringify(updates), orig) === expected);
+        });
+
+        it("should update the Travis CI config", () => {
+            const orig = `dist: trusty
 sudo: required
 language: java
 jdk:
@@ -505,22 +571,22 @@ deploy:
     tags: true
     condition: "$TRAVIS_TAG =~ ^[0-9]+\\\\.[0-9]+\\\\.[0-9]+$"
 `;
-        const updates = {
-            cache: {
-                directories: ["$HOME/.m2"],
-            },
-            deploy: null,
-            install: "nvm install 8.1.2",
-            notifications: {
-                webhooks: {
-                    on_cancel: "always",
-                    on_error: "always",
+            const updates = {
+                cache: {
+                    directories: ["$HOME/.m2"],
                 },
-            },
-            script: "bash src/main/scripts/travis-build.bash",
-            sudo: false,
-        };
-        const expected = `dist: trusty
+                deploy: null,
+                install: "nvm install 8.1.2",
+                notifications: {
+                    webhooks: {
+                        on_cancel: "always",
+                        on_error: "always",
+                    },
+                },
+                script: "bash src/main/scripts/travis-build.bash",
+                sudo: false,
+            };
+            const expected = `dist: trusty
 sudo: false
 language: java
 jdk:
@@ -550,14 +616,14 @@ cache:
   directories:
   - $HOME/.m2
 `;
-        const updated = updateYamlDocument(updates, orig);
-        assert(updated === expected);
-        const updatedFromString = updateYamlDocumentWithString(JSON.stringify(updates), orig);
-        assert(updatedFromString === expected);
-    });
+            const updated = updateYamlDocument(updates, orig);
+            assert(updated === expected);
+            const updatedFromString = updateYamlDocumentWithString(JSON.stringify(updates), orig);
+            assert(updatedFromString === expected);
+        });
 
-    it("should update the Travis CI config, respecting spaces and comments", () => {
-        const orig = `# this is the Travis CI config
+        it("should update the Travis CI config, respecting spaces and comments", () => {
+            const orig = `# this is the Travis CI config
 dist: trusty
 language: java
 jdk:
@@ -602,22 +668,22 @@ deploy:
     tags: true
     condition: "$TRAVIS_TAG =~ ^[0-9]+\\\\.[0-9]+\\\\.[0-9]+$"
 `;
-        const updates = {
-            cache: {
-                directories: ["$HOME/.m2"],
-            },
-            deploy: null,
-            install: "nvm install 8.1.2",
-            notifications: {
-                webhooks: {
-                    on_cancel: "always",
-                    on_error: "always",
+            const updates = {
+                cache: {
+                    directories: ["$HOME/.m2"],
                 },
-            },
-            script: "bash src/main/scripts/travis-build.bash",
-            sudo: "required",
-        };
-        const expected = `# this is the Travis CI config
+                deploy: null,
+                install: "nvm install 8.1.2",
+                notifications: {
+                    webhooks: {
+                        on_cancel: "always",
+                        on_error: "always",
+                    },
+                },
+                script: "bash src/main/scripts/travis-build.bash",
+                sudo: "required",
+            };
+            const expected = `# this is the Travis CI config
 dist: trusty
 language: java
 jdk:
@@ -653,27 +719,27 @@ cache:
   - $HOME/.m2
 sudo: required
 `;
-        const updated = updateYamlDocument(updates, orig);
-        assert(updated === expected);
-        const updatedFromString = updateYamlDocumentWithString(JSON.stringify(updates), orig);
-        assert(updatedFromString === expected);
-    });
+            const updated = updateYamlDocument(updates, orig);
+            assert(updated === expected);
+            const updatedFromString = updateYamlDocumentWithString(JSON.stringify(updates), orig);
+            assert(updatedFromString === expected);
+        });
 
-    it("should add a value in first document of multi-doc YAML", () => {
-        const orig = `artist: Arcade Fire
+        it("should add a value in first document of multi-doc YAML", () => {
+            const orig = `artist: Arcade Fire
 ---
 artist: Broken Social Scene
 `;
-        const updates = {
-            albums: [
-                "Funeral",
-                "Neon Bible",
-                "The Suburbs",
-                "Reflektor",
-                "Everything Now",
-            ],
-        };
-        const expected = `artist: Arcade Fire
+            const updates = {
+                albums: [
+                    "Funeral",
+                    "Neon Bible",
+                    "The Suburbs",
+                    "Reflektor",
+                    "Everything Now",
+                ],
+            };
+            const expected = `artist: Arcade Fire
 albums:
 - Funeral
 - Neon Bible
@@ -683,12 +749,12 @@ albums:
 ---
 artist: Broken Social Scene
 `;
-        const updated = updateYamlDocuments(updates, orig);
-        assert(updated === expected);
-    });
+            const updated = updateYamlDocuments(updates, orig);
+            assert(updated === expected);
+        });
 
-    it("should update value in second document, not add in first document of multi-doc YAML", () => {
-        const orig = `artist: Arcade Fire
+        it("should update value in second document, not add in first document of multi-doc YAML", () => {
+            const orig = `artist: Arcade Fire
 ---
 artist: Broken Social Scene
 albums:
@@ -697,16 +763,16 @@ albums:
 - Broken Social Scene
 - Forgiveness Rock Record
 `;
-        const updates = {
-            albums: [
-                "Feel Good Lost",
-                "You Forgot It in People",
-                "Broken Social Scene",
-                "Forgiveness Rock Record",
-                "Hug of Thunder",
-            ],
-        };
-        const expected = `artist: Arcade Fire
+            const updates = {
+                albums: [
+                    "Feel Good Lost",
+                    "You Forgot It in People",
+                    "Broken Social Scene",
+                    "Forgiveness Rock Record",
+                    "Hug of Thunder",
+                ],
+            };
+            const expected = `artist: Arcade Fire
 ---
 artist: Broken Social Scene
 albums:
@@ -716,12 +782,12 @@ albums:
 - Forgiveness Rock Record
 - Hug of Thunder
 `;
-        const updated = updateYamlDocuments(updates, orig);
-        assert(updated === expected);
-    });
+            const updated = updateYamlDocuments(updates, orig);
+            assert(updated === expected);
+        });
 
-    it("should update a value in first document of multi-doc YAML", () => {
-        const orig = `artist: Arcade Fire
+        it("should update a value in first document of multi-doc YAML", () => {
+            const orig = `artist: Arcade Fire
 albums:
 - Funeral
 - Neon Bible
@@ -736,37 +802,16 @@ albums:
 - Forgiveness Rock Record
 - Hug of Thunder
 `;
-        const updates = {
-            albums: [
-                "Funeral",
-                "Neon Bible",
-                "The Suburbs",
-                "Reflektor",
-                "Everything Now",
-            ],
-        };
-        const expected = `artist: Arcade Fire
-albums:
-- Funeral
-- Neon Bible
-- The Suburbs
-- Reflektor
-- Everything Now
----
-artist: Broken Social Scene
-albums:
-- Feel Good Lost
-- You Forgot It in People
-- Broken Social Scene
-- Forgiveness Rock Record
-- Hug of Thunder
-`;
-        const updated = updateYamlDocuments(updates, orig);
-        assert(updated === expected);
-    });
-
-    it("should remove a value in first document of multi-doc YAML", () => {
-        const orig = `artist: Arcade Fire
+            const updates = {
+                albums: [
+                    "Funeral",
+                    "Neon Bible",
+                    "The Suburbs",
+                    "Reflektor",
+                    "Everything Now",
+                ],
+            };
+            const expected = `artist: Arcade Fire
 albums:
 - Funeral
 - Neon Bible
@@ -782,8 +827,18 @@ albums:
 - Forgiveness Rock Record
 - Hug of Thunder
 `;
-        const updates = { albums: null };
-        const expected = `artist: Arcade Fire
+            const updated = updateYamlDocuments(updates, orig);
+            assert(updated === expected);
+        });
+
+        it("should remove a value in first document of multi-doc YAML", () => {
+            const orig = `artist: Arcade Fire
+albums:
+- Funeral
+- Neon Bible
+- The Suburbs
+- Reflektor
+- Everything Now
 ---
 artist: Broken Social Scene
 albums:
@@ -793,32 +848,43 @@ albums:
 - Forgiveness Rock Record
 - Hug of Thunder
 `;
-        const updated = updateYamlDocuments(updates, orig);
-        assert(updated === expected);
-    });
+            const updates = { albums: null };
+            const expected = `artist: Arcade Fire
+---
+artist: Broken Social Scene
+albums:
+- Feel Good Lost
+- You Forgot It in People
+- Broken Social Scene
+- Forgiveness Rock Record
+- Hug of Thunder
+`;
+            const updated = updateYamlDocuments(updates, orig);
+            assert(updated === expected);
+        });
 
-    it("should update a value of multi-doc YAML with initial separator", () => {
-        const orig = `---
+        it("should update a value of multi-doc YAML with initial separator", () => {
+            const orig = `---
 artist: Arcade Fire
 label: Merge Records
 ---
 artist: Broken Social Scene
 label: "Arts & Crafts"
 `;
-        const updates = { label: "Sonovox" };
-        const expected = `---
+            const updates = { label: "Sonovox" };
+            const expected = `---
 artist: Arcade Fire
 label: Sonovox
 ---
 artist: Broken Social Scene
 label: "Arts & Crafts"
 `;
-        const updated = updateYamlDocuments(updates, orig);
-        assert(updated === expected);
-    });
+            const updated = updateYamlDocuments(updates, orig);
+            assert(updated === expected);
+        });
 
-    it("should update values of multi-doc YAML in the right docs", () => {
-        const orig = `---
+        it("should update values of multi-doc YAML in the right docs", () => {
+            const orig = `---
 artist: Arcade Fire
 label: Merge Records
 ---
@@ -830,17 +896,17 @@ albums:
 - Forgiveness Rock Record
 label: "Arts & Crafts"
 `;
-        const updates = {
-            albums: [
-                "Feel Good Lost",
-                "You Forgot It in People",
-                "Broken Social Scene",
-                "Forgiveness Rock Record",
-                "Hug of Thunder",
-            ],
-            label: "Sonovox",
-        };
-        const expected = `---
+            const updates = {
+                albums: [
+                    "Feel Good Lost",
+                    "You Forgot It in People",
+                    "Broken Social Scene",
+                    "Forgiveness Rock Record",
+                    "Hug of Thunder",
+                ],
+                label: "Sonovox",
+            };
+            const expected = `---
 artist: Arcade Fire
 label: Sonovox
 ---
@@ -853,12 +919,12 @@ albums:
 - Hug of Thunder
 label: "Arts & Crafts"
 `;
-        const updated = updateYamlDocuments(updates, orig);
-        assert(updated === expected);
-    });
+            const updated = updateYamlDocuments(updates, orig);
+            assert(updated === expected);
+        });
 
-    it("should update values of multi-doc YAML in the right docs respecting empty lines and comments", () => {
-        const orig = `---
+        it("should update values of multi-doc YAML in the right docs respecting empty lines and comments", () => {
+            const orig = `---
 
 artist: Arcade Fire
 
@@ -874,17 +940,17 @@ albums:
 - Forgiveness Rock Record
 label: "Arts & Crafts"
 `;
-        const updates = {
-            albums: [
-                "Feel Good Lost",
-                "You Forgot It in People",
-                "Broken Social Scene",
-                "Forgiveness Rock Record",
-                "Hug of Thunder",
-            ],
-            label: "Sonovox",
-        };
-        const expected = `---
+            const updates = {
+                albums: [
+                    "Feel Good Lost",
+                    "You Forgot It in People",
+                    "Broken Social Scene",
+                    "Forgiveness Rock Record",
+                    "Hug of Thunder",
+                ],
+                label: "Sonovox",
+            };
+            const expected = `---
 
 artist: Arcade Fire
 
@@ -901,13 +967,13 @@ albums:
 - Hug of Thunder
 label: "Arts & Crafts"
 `;
-        const updated = updateYamlDocuments(updates, orig);
-        assert(updated === expected);
-    });
+            const updated = updateYamlDocuments(updates, orig);
+            assert(updated === expected);
+        });
 
-    /* tslint:disable:max-line-length */
-    it("should parse YAML values with regex characters", () => {
-        const orig = `server:
+        /* tslint:disable:max-line-length */
+        it("should parse YAML values with regex characters", () => {
+            const orig = `server:
   port: 8090
 
 endpoints:
@@ -938,23 +1004,23 @@ spring:
     username: rabbitmq
     password: rabbitmq
 `;
-        const updates = {
-            logging: {
-                level: {
-                    "com.atomist.spring.agent": "DEBUG",
+            const updates = {
+                logging: {
+                    level: {
+                        "com.atomist.spring.agent": "DEBUG",
+                    },
                 },
-            },
-            atomist: {
-                enabled: true,
-                debug: true,
-                url: `https://webhook.atomist.com/atomist/application/teams/TK421WAYAYP`,
-                environment: {
-                    domain: "${DOMAIN:development}",
-                    pod: "${HOSTNAME:${random.value}}",
+                atomist: {
+                    enabled: true,
+                    debug: true,
+                    url: `https://webhook.atomist.com/atomist/application/teams/TK421WAYAYP`,
+                    environment: {
+                        domain: "${DOMAIN:development}",
+                        pod: "${HOSTNAME:${random.value}}",
+                    },
                 },
-            },
-        };
-        const expected = `server:
+            };
+            const expected = `server:
   port: 8090
 
 endpoints:
@@ -993,9 +1059,11 @@ atomist:
     domain: '\${DOMAIN:development}'
     pod: '\${HOSTNAME:\${random.value}}'
 `;
-        const updated = updateYamlDocuments(updates, orig);
-        assert(updated === expected);
+            const updated = updateYamlDocuments(updates, orig);
+            assert(updated === expected);
+        });
+        /* tslint:enable:max-line-length */
+
     });
-    /* tslint:enable:max-line-length */
 
 });
