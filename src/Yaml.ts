@@ -195,6 +195,8 @@ export function updateYamlKey(
                     return (/\S/.test(l)) ? indentLevel + l : l;
                 });
                 const indentedYaml = indentedLines.join("\n");
+                // last line must be empty but indentation matching may erroneously indent the last
+                // empty line if there were indented empty lines after a deleted key
                 const trailerYaml = (/\n$/.test(indentedYaml)) ? indentedYaml : indentedYaml + "\n";
                 updatedYaml = updatedYaml.replace(keyValRegExp, `\$1${key}:\n${trailerYaml}`);
             } else {
