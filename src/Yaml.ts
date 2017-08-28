@@ -113,9 +113,9 @@ export function updateYamlDocument(
 /**
  * Update, insert, or delete the value of a key in `currentYml`, a
  * string containing valid YAML.  It does its best to retain the same
- * formatting, but empty lines may disappear if adjacent lines are
- * edited and comments that are parsed as part of a value that is
- * deleted will be deleted.
+ * formatting, but empty lines and trailing whitespace may disappear
+ * if adjacent lines are edited and comments that are parsed as part
+ * of a value that is deleted will be deleted.
  *
  * @param key  the key whose value should be replaced
  * @param value  the value to set the key to, set to `null` or `undefined` to remove the key
@@ -128,8 +128,8 @@ export function updateYamlKey(
     currentYaml: string,
     options = { keepArrayIndent: false },
 ): string {
-    // match index                  01                              2                 3
-    const keyValRegExp = new RegExp(`(^|\\n)${key}\\s*:(?:\\s*?\\n)?([\\s\\S]*?)(?:\\n([^\\-\\s#]|$))`);
+    // match index                  01                                          2
+    const keyValRegExp = new RegExp(`(^|\\n)${key}[^\\S\\n]*:(?:[^\\S\\n]*?\\n)?([\\s\\S]*?(?:\\n(?![\\n\\- #])|$))`);
 
     let updatedYaml = (/\n$/.test(currentYaml)) ? currentYaml : currentYaml + "\n";
     let current: any;
@@ -146,7 +146,7 @@ export function updateYamlKey(
 
     if (value === null || value === undefined) {
         if (key in current) {
-            updatedYaml = updatedYaml.replace(keyValRegExp, "$1$3");
+            updatedYaml = updatedYaml.replace(keyValRegExp, "$1");
         }
     } else if (knownType(value)) {
         if (key in current) {
@@ -154,7 +154,7 @@ export function updateYamlKey(
                 return currentYaml;
             } else if (simpleType(value) || simpleType(current[key])) {
                 const newKeyValue = formatYamlKey(key, value, options);
-                updatedYaml = updatedYaml.replace(keyValRegExp, `\$1${newKeyValue}\$3`);
+                updatedYaml = updatedYaml.replace(keyValRegExp, `\$1${newKeyValue}`);
             } else if (typeof current[key] === "object") {
                 const keyMatches = keyValRegExp.exec(updatedYaml);
                 if (!keyMatches) {
@@ -162,7 +162,7 @@ export function updateYamlKey(
                 }
                 const keyObject = keyMatches[2];
                 // find first properly indented line
-                const indentationRegExp = /^( +)[^\-#\s]/m;
+                const indentationRegExp = /^( +)[^\-# ]/m;
                 const indentMatches = indentationRegExp.exec(keyObject);
                 if (!indentMatches) {
                     throw new Error(`failed to match indentation for elements of key ${key}: ${keyObject}`);
@@ -172,11 +172,10 @@ export function updateYamlKey(
                 const lines = keyObject.split("\n");
                 const indentation: YamlLine[] = [];
                 const undentedLines = lines.map(l => {
-                    // should we have a side effect when mapping over an array?
                     indentation.push(new YamlLine(l, indentRegex.test(l)));
                     return l.replace(indentRegex, "");
                 });
-                let currentValueYaml = undentedLines.join("\n") + "\n";
+                let currentValueYaml = undentedLines.join("\n");
                 _.forIn(value, (v, k, o) => {
                     currentValueYaml = updateYamlKey(k, v, currentValueYaml, options);
                 });
@@ -196,12 +195,14 @@ export function updateYamlKey(
                     return (/\S/.test(l)) ? indentLevel + l : l;
                 });
                 const indentedYaml = indentedLines.join("\n");
-                updatedYaml = updatedYaml.replace(keyValRegExp, `\$1${key}:\n${indentedYaml}\$3`);
+                const trailerYaml = (/\n$/.test(indentedYaml)) ? indentedYaml : indentedYaml + "\n";
+                updatedYaml = updatedYaml.replace(keyValRegExp, `\$1${key}:\n${trailerYaml}`);
             } else {
                 throw new Error(`cannot update current YAML key ${key} of type ${typeof current[key]}`);
             }
         } else {
-            updatedYaml = updatedYaml.replace(/\n+$/, "\n") + formatYamlKey(key, value, options);
+            const tailMatches = /\n(\n*)$/.exec(updatedYaml);
+            updatedYaml = updatedYaml.replace(/\n+$/, "\n") + formatYamlKey(key, value, options) + tailMatches[1];
         }
     } else {
         throw new Error(`cannot update YAML with value (${value}) of type ${typeof value}`);
@@ -240,9 +241,7 @@ export function formatYamlKey(key: string, value: any, options = { keepArrayInde
         throw new Error(`failed to create YAML for {${key}: ${value}}: ${(e as Error).message}`);
     }
 
-    if (!options.keepArrayIndent) {
-        y = y.replace(/  - /g, "- ");
-    }
+    y = arrayIndent(y, options.keepArrayIndent);
 
     return y;
 }
@@ -261,9 +260,18 @@ export function formatYaml(obj: any, options = { keepArrayIndent: false }): stri
         throw new Error(`failed to create YAML for '${JSON.stringify(obj)}': ${(e as Error).message}`);
     }
 
-    if (!options.keepArrayIndent) {
-        y = y.replace(/  - /g, "- ");
-    }
+    y = arrayIndent(y, options.keepArrayIndent);
 
     return y;
+}
+
+/**
+ * Remove superfluous indentation from array if `indentArray` is `false`.
+ *
+ * @param y  YAML document as string
+ * @param indentArray retain indented arrays if `true`
+ * @return YAML document as string with arrays indented as desired.
+ */
+function arrayIndent(y: string, indentArray: boolean): string {
+    return (indentArray) ? y : y.replace(/^( *)  - /gm, "$1- ");
 }

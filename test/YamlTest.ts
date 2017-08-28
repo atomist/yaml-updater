@@ -15,7 +15,7 @@
  */
 
 import "mocha";
-import assert = require("power-assert");
+import * as assert from "power-assert";
 
 import {
     formatYamlKey,
@@ -124,6 +124,7 @@ label: Merge Records
 
 # who is on this label?
 artist: Arcade Fire
+
 `;
             const value = "Arcade Fire";
             assert(updateYamlKey("artist", value, original) === expected);
@@ -355,6 +356,8 @@ albums:
   The Suburbs: 2010
   Reflektor: 2013
   Everything Now: 2017
+
+
 label: Merge Records
 `;
             const value = { "Everything Now": 2017 };

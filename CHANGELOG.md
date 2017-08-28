@@ -7,13 +7,15 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased]
 
-[Unreleased]: https://github.com/atomist/yaml-updater/compare/0.7.0...HEAD
+[Unreleased]: https://github.com/atomist/yaml-updater/compare/0.1.0...HEAD
 
 ### Fixed
 
 -   Updating object value having empty first line [#1][1]
+-   Updating object with trailing spaces [#2][2]
 
 [1]: https://github.com/atomist/yaml-updater/issues/1
+[2]: https://github.com/atomist/yaml-updater/issues/2
 
 ## [0.1.0] - 2017-08-18
 
