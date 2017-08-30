@@ -204,7 +204,8 @@ export function updateYamlKey(
             }
         } else {
             const tailMatches = /\n(\n*)$/.exec(updatedYaml);
-            updatedYaml = updatedYaml.replace(/\n+$/, "\n") + formatYamlKey(key, value, options) + tailMatches[1];
+            const tail = (tailMatches && tailMatches[1]) ? tailMatches[1] : "";
+            updatedYaml = updatedYaml.replace(/\n+$/, "\n") + formatYamlKey(key, value, options) + tail;
         }
     } else {
         throw new Error(`cannot update YAML with value (${value}) of type ${typeof value}`);

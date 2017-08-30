@@ -16,16 +16,28 @@ with [Atomist][www] [Rugs][docs].
 
 ## Using
 
-Each function is documented using [TypeDoc][typedoc] in
-the [source][].  The [tests][] are pretty complete and a great source
-of examples for what functions are available and how to use them.
+This module defines and exports several functions for formatting and
+updating YAML.  The published module contains the TypeScript type
+definitions.  To use from TypeScript, import the functions you want to
+use.  For example:
+
+```typescript
+import { updateYamlDocument } from "@atomist/yaml-updater/Yaml";
+```
+
+Each function is documented using [TypeDoc][typedoc], which are
+published at [https://atomist.github.io/yaml-updater/][gh-pages].
+The [tests][] are pretty complete and a great source of examples for
+what functions are available and how to use them.
 
 In general, updating a property value adds property and value if it
 does not exist.  If the property does exist in the original YAML, its
 value will be updated.  If its current value is an object, the value
 will be recursively updated, resulting in nested properties being
 add/updated without affecting elements of the original YAML that do
-not appear in the updates.
+not appear in the updates.  If the updated value is `null` or
+`undefined`, the key and value will be removed from the YAML if it
+exists.  If it does not exist, there will be no change.
 
 Most functions take an optional last `options` parameter that is an
 object.  Currently the only used parameter in the `options` object is
@@ -55,7 +67,7 @@ modified, so we recommend you base the value for this option on the
 format of the original YAML document you are updating.
 
 [typedoc]: http://typedoc.org/ (TypeDoc)
-[source]: src/Yaml.ts (yaml-updater Source Code)
+[gh-pages]: https://atomist.github.io/yaml-updater/ (@atomist/yaml-updater TypeDocs)
 [tests]: src/YamlTest.ts (yaml-updater Tests)
 
 ## Support
@@ -80,7 +92,8 @@ Command | Reason
 `npm run lint` | to run tslint against the TypeScript
 `npm run compile` | to compile all TypeScript into JavaScript
 `npm test` | to run tests and ensure everything is working
-`npm run autotest` | run tests continuously (you also need to run `tsc -w`)
+`npm run autotest` | run tests continuously (you may also need to run `tsc -w`)
+`npm run clean` | remove stray compiled JavaScript files and build directory
 
 ### Release
 
@@ -93,7 +106,7 @@ example:
 [semver]: http://semver.org
 
 ```
-$ git tag -a 1.2.
+$ git tag -a 1.2.3
 $ git push --tags
 ```
 

@@ -1,10 +1,8 @@
+scripts/
 src/
 test/
 build/
-release/
 .travis.yml
-*.bash
-tsconfig.*
-tslint.json
+ts*.json
 yarn.lock
 .vscode
