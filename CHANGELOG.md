@@ -9,6 +9,14 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 [Unreleased]: https://github.com/atomist/yaml-updater/compare/0.2.0...HEAD
 
+### Changed
+
+-   Update TypeScript to 2.5.1
+
+### Added
+
+-   Automatic publication of TypeDoc to gh-pages on release
+
 ## [0.2.0] - 2017-08-28
 
 [0.2.0]: https://github.com/atomist/yaml-updater/compare/0.1.0...0.2.0
