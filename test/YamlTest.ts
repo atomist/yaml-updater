@@ -1069,4 +1069,45 @@ atomist:
 
     });
 
+    it("should support updating all documents at once", () => {
+        const orig = `---
+artist: Arcade Fire
+label: Merge Records
+---
+artist: Broken Social Scene
+albums:
+- Feel Good Lost
+- You Forgot It in People
+- Broken Social Scene
+- Forgiveness Rock Record
+label: "Arts & Crafts"
+`;
+        const updates = {
+            genre: "humanbeatbox",
+            date: {
+                year: 2017,
+            },
+        };
+        const expected = `---
+artist: Arcade Fire
+label: Merge Records
+genre: humanbeatbox
+date:
+  year: 2017
+---
+artist: Broken Social Scene
+albums:
+- Feel Good Lost
+- You Forgot It in People
+- Broken Social Scene
+- Forgiveness Rock Record
+label: "Arts & Crafts"
+genre: humanbeatbox
+date:
+  year: 2017
+`;
+        const updated = updateYamlDocuments(updates, orig, { updateAll: true });
+        assert(updated === expected);
+    });
+
 });
