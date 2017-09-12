@@ -17,6 +17,11 @@
 import * as yaml from "js-yaml";
 import * as _ from "lodash";
 
+export interface Options {
+    keepArrayIndent?: boolean;
+    updateAll?: boolean;
+}
+
 /**
  * Parse the provides update string as JSON and use the keys in the
  * provided object to update, insert, or delete keys in the provided
@@ -30,7 +35,7 @@ import * as _ from "lodash";
 export function updateYamlDocumentWithString(
     updatesString: string,
     currentYaml: string,
-    options = { keepArrayIndent: false },
+    options: Options = { keepArrayIndent: false },
 ): string {
     let updates = {};
     try {
@@ -44,10 +49,13 @@ export function updateYamlDocumentWithString(
 
 /**
  * Use the keys in the provided object to update, insert, or delete
- * keys in the provided YAML.  The YAML can be multiple documents.  If
- * the keys are found in any of the documents, they are updated in the
- * first document the key exists in.  If a key is not found in any
- * document, it is added to the first document.
+ * keys in the provided YAML.  The YAML can be multiple documents.
+ *
+ * The updating follows two possible strategies depending on the ̀updateAll`
+ * option. When `false`, the default, if the keys are found in any of the
+ * documents, they are updated in the first document the key exists in. If a key
+ * is not found in any document, it is added to the first document. When
+ * `̀updateAll` is `true`, the updates append on all documents.
  *
  * @param updates      object of updates
  * @param currentYaml  YAML document to update
@@ -57,12 +65,12 @@ export function updateYamlDocumentWithString(
 export function updateYamlDocuments(
     updates: {},
     yamlDocuments: string,
-    options = { keepArrayIndent: false },
+    options: Options= { keepArrayIndent: false, updateAll: false },
 ): string {
-
     const yamlSepRegExp = /^(---(?:[ \t]+.*)?\n)/m;
     const yamlDocs = yamlDocuments.split(yamlSepRegExp);
     const insertIndex = (/\S/.test(yamlDocs[0]) || yamlDocs.length === 1) ? 0 : 2;
+    const updateAll = options.updateAll || false;
 
     _.forIn(updates, (v, k, o) => {
         let found = -1;
@@ -76,13 +84,20 @@ export function updateYamlDocuments(
             if (!current) {
                 continue;
             }
-            if (k in current) {
-                found = i;
-                break;
+            if (updateAll) {
+                yamlDocs[i] = updateYamlKey(k, v, yamlDocs[i], options);
+            } else {
+                if (k in current) {
+                    found = i;
+                    break;
+                }
             }
         }
-        const index = (found < 0) ? insertIndex : found;
-        yamlDocs[index] = updateYamlKey(k, v, yamlDocs[index], options);
+
+        if (!updateAll) {
+            const index = (found < 0) ? insertIndex : found;
+            yamlDocs[index] = updateYamlKey(k, v, yamlDocs[index], options);
+        }
     });
 
     return yamlDocs.join("");
@@ -100,7 +115,7 @@ export function updateYamlDocuments(
 export function updateYamlDocument(
     updates: {},
     currentYaml: string,
-    options = { keepArrayIndent: false },
+    options: Options = { keepArrayIndent: false },
 ): string {
 
     _.forIn(updates, (v, k, o) => {
@@ -126,7 +141,7 @@ export function updateYamlKey(
     key: string,
     value: any,
     currentYaml: string,
-    options = { keepArrayIndent: false },
+    options: Options = { keepArrayIndent: false },
 ): string {
     // match index                  01                                          2
     const keyValRegExp = new RegExp(`(^|\\n)${key}[^\\S\\n]*:(?:[^\\S\\n]*?\\n)?([\\s\\S]*?(?:\\n(?![\\n\\- #])|$))`);
@@ -234,7 +249,7 @@ class YamlLine {
  * @param value  value to serialize
  * @param options settings for the formatting
  */
-export function formatYamlKey(key: string, value: any, options = { keepArrayIndent: false }): string {
+export function formatYamlKey(key: string, value: any, options: Options = { keepArrayIndent: false }): string {
     const obj: any = {};
     obj[key] = value;
     let y: string;
@@ -255,7 +270,7 @@ export function formatYamlKey(key: string, value: any, options = { keepArrayInde
  * @param obj     object to serialize
  * @param options settings for the formatting
  */
-export function formatYaml(obj: any, options = { keepArrayIndent: false }): string {
+export function formatYaml(obj: any, options: Options = { keepArrayIndent: false }): string {
     let y: string;
     try {
         y = yaml.safeDump(obj);
@@ -275,6 +290,6 @@ export function formatYaml(obj: any, options = { keepArrayIndent: false }): stri
  * @param indentArray retain indented arrays if `true`
  * @return YAML document as string with arrays indented as desired.
  */
-function arrayIndent(y: string, indentArray: boolean): string {
+function arrayIndent(y: string, indentArray: boolean | undefined): string {
     return (indentArray) ? y : y.replace(/^( *)  - /gm, "$1- ");
 }

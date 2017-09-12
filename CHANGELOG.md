@@ -16,6 +16,9 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 ### Added
 
 -   Automatic publication of TypeDoc to gh-pages on release
+-   Option to update all documents at once in a multi documents file [#3][3]
+
+[3]: https://github.com/atomist/yaml-updater/issues/3
 
 ## [0.2.0] - 2017-08-28
 
