@@ -49,6 +49,6 @@
     "lint": "tslint --format verbose --project . --exclude '{build,node_modules}/**' '**/*.ts'",
     "lint-fix": "npm run lint -- --fix",
     "test": "mocha --compilers ts:espower-typescript/guess 'test/**/*.ts'",
-    "typedoc": "typedoc --mode modules"
+    "typedoc": "typedoc --mode modules --excludeExternals"
   }
 }
