@@ -1,12 +1,13 @@
 # @atomist/yaml-updater
 
+[![npm version](https://badge.fury.io/js/%40atomist%2Fyaml-updater.svg)](https://badge.fury.io/js/%40atomist%2Fyaml-updater)
 [![Build Status](https://travis-ci.org/atomist/yaml-updater.svg?branch=master)](https://travis-ci.org/atomist/yaml-updater)
 
 [Node][node] [TypeScript][ts]
 module [`@atomist/yaml-updater`][yaml-updater] for creating clean
 changes to YAML files producing reasonable diffs from the original.
 This module was originally developed for use
-with [Atomist][www] [Rugs][docs].
+with [Atomist][www] [automations][docs].
 
 [node]: https://nodejs.org/
 [ts]: https://www.typescriptlang.org/
