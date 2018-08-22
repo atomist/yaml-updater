@@ -1,6 +1,6 @@
 {
   "name": "@atomist/yaml-updater",
-  "version": "0.4.0",
+  "version": "0.4.1",
   "description": "Update YAML documents while ensuring clean diffs",
   "author": {
     "name": "Atomist",
