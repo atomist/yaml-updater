@@ -1,7 +1,7 @@
 {
   "name": "@atomist/yaml-updater",
-  "description": "Update YAML documents while ensuring clean diffs",
   "version": "0.4.0",
+  "description": "Update YAML documents while ensuring clean diffs",
   "author": {
     "name": "Atomist",
     "email": "support@atomist.com",
@@ -13,13 +13,13 @@
     "type": "git",
     "url": "git+https://github.com/atomist/yaml-updater.git"
   },
+  "bugs": {
+    "url": "https://github.com/atomist/yaml-updater/issues"
+  },
   "keywords": [
     "atomist",
     "yaml"
   ],
-  "bugs": {
-    "url": "https://github.com/atomist/yaml-updater/issues"
-  },
   "main": "./index.js",
   "types": "./index.d.ts",
   "dependencies": {
@@ -58,5 +58,9 @@
     "test": "mocha --require espower-typescript/guess \"test/**/*.test.ts\"",
     "test:one": "mocha --require espower-typescript/guess \"test/**/${TEST:-*.test.ts}\"",
     "typedoc": "npm run doc"
+  },
+  "engines": {
+    "node": ">=8.0.0",
+    "npm": ">=5.0.0"
   }
 }
