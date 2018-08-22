@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased](https://github.com/atomist/yaml-updater/compare/0.4.0...HEAD)
 
+### Fixed
+
+-   Added rimraf to devDependencies.
+
 ## [0.4.0](https://github.com/atomist/yaml-updater/compare/0.3.0...0.4.0) - 2018-08-22
 
 ### Changed
