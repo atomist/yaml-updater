@@ -1,19 +1,17 @@
 # @atomist/yaml-updater
 
 [![npm version](https://badge.fury.io/js/%40atomist%2Fyaml-updater.svg)](https://badge.fury.io/js/%40atomist%2Fyaml-updater)
-[![Build Status](https://travis-ci.org/atomist/yaml-updater.svg?branch=master)](https://travis-ci.org/atomist/yaml-updater)
 
-[Node][node] [TypeScript][ts]
-module [`@atomist/yaml-updater`][yaml-updater] for creating clean
-changes to YAML files producing reasonable diffs from the original.
-This module was originally developed for use
-with [Atomist][www] [automations][docs].
+[Node][node] [TypeScript][ts] module
+[`@atomist/yaml-updater`][yaml-updater] for creating clean changes to
+YAML files producing reasonable diffs from the original.  This module
+was originally developed for use with [Atomist][atomist] [code
+transforms][docs].
 
 [node]: https://nodejs.org/
 [ts]: https://www.typescriptlang.org/
 [yaml-updater]: https://www.npmjs.com/package/@atomist/yaml-updater
-[www]: https://www.atomist.com/
-[docs]: http://docs.atomist.com/
+[docs]: https://docs.atomist.com/
 
 ## Using
 
@@ -23,7 +21,7 @@ definitions.  To use from TypeScript, import the functions you want to
 use.  For example:
 
 ```typescript
-import { updateYamlDocument } from "@atomist/yaml-updater/Yaml";
+import { updateYamlDocument } from "@atomist/yaml-updater";
 ```
 
 Each function is documented using [TypeDoc][typedoc], which are
@@ -41,11 +39,11 @@ not appear in the updates.  If the updated value is `null` or
 exists.  If it does not exist, there will be no change.
 
 Most functions take an optional last `options` parameter that is an
-object.  Currently the only used parameter in the `options` object is
-"keepArrayIndent".  If the value of that property is true, the
-resulting YAML will have arrays indented compared to their parent
-object.  If the value is false, the indentation of the array will be
-at the same level as its parent object.  For example, if
+object.  Currently the only `options` object parameter used all the
+update functions is "keepArrayIndent".  If the value of that property
+is true, the resulting YAML will have arrays indented compared to
+their parent object.  If the value is false, the indentation of the
+array will be at the same level as its parent object.  For example, if
 `keepArrayIndent: true`, you will get
 
 ```yaml
@@ -67,15 +65,67 @@ structure.  Note that only arrays that are updated in some way will be
 modified, so we recommend you base the value for this option on the
 format of the original YAML document you are updating.
 
+The `updateYamlDocuments` function also uses the "updateAll" `options`
+property.  If `true`, the `updates` provided to `updateYamlDocuments`
+will be applied to all YAML documents.  If `false`, the `updates` will
+only be applied to YAML documents with keys that match those in the
+`updates` object.  For example, given the following YAML:
+
+```yaml
+---
+first: element
+second: element
+---
+first: thing
+second: thing
+third: thing
+```
+
+calling
+
+```typescript
+const updated = updateYamlDocuments({ third: "item" }, docs, { updateAll: false });
+```
+
+with `docs` being the above YAML documents, would result in:
+
+```yaml
+---
+first: element
+second: element
+---
+first: thing
+second: thing
+third: item
+```
+
+while calling
+
+```typescript
+const updated = updateYamlDocuments({ third: "item" }, docs, { updateAll: true });
+```
+
+would result in:
+
+```yaml
+---
+first: element
+second: element
+third: item
+---
+first: thing
+second: thing
+third: item
+```
+
 [typedoc]: http://typedoc.org/ (TypeDoc)
 [gh-pages]: https://atomist.github.io/yaml-updater/ (@atomist/yaml-updater TypeDocs)
-[tests]: src/YamlTest.ts (yaml-updater Tests)
+[tests]: src/yaml.test.ts (yaml-updater Tests)
 
 ## Support
 
 General support questions should be discussed in the `#support`
-channel on our community Slack team
-at [atomist-community.slack.com][slack].
+channel in the [Atomist community Slack workspace][slack].
 
 If you find a problem, please create an [issue][].
 
@@ -85,40 +135,34 @@ If you find a problem, please create an [issue][].
 
 You will need to install [node][] to build and test this project.
 
+[node]: https://nodejs.org/ (Node.js)
+
 ### Build and Test
+
+Use the following package scripts to build, test, and perform other
+development tasks.
 
 Command | Reason
 ------- | ------
-`npm install` | to install all the required packages
-`npm run lint` | to run tslint against the TypeScript
-`npm run compile` | to compile all TypeScript into JavaScript
-`npm test` | to run tests and ensure everything is working
-`npm run autotest` | run tests continuously (you may also need to run `tsc -w`)
-`npm run clean` | remove stray compiled JavaScript files and build directory
+`npm install` | install project dependencies
+`npm run build` | compile, test, lint, and generate docs
+`npm run lint` | run TSLint against the TypeScript
+`npm run compile` | generate types from GraphQL and compile TypeScript
+`npm test` | run tests
+`npm run autotest` | run tests every time a file changes
+`npm run clean` | remove files generated during the build
 
 ### Release
 
-To create a new release of the project, simply push a tag of the form
-`M.N.P` where `M`, `N`, and `P` are integers that form the next
-appropriate [semantic version][semver] for release.  The version in
-the package.json is replaced by the build and is totally ignored!  For
-example:
+Releases are managed by the [Atomist SDM][atomist-sdm].  Press the
+release button in the Atomist dashboard or Slack.
 
-[semver]: http://semver.org
-
-```
-$ git tag -a 1.2.3
-$ git push --tags
-```
-
-The Travis CI build (see badge at the top of this page) will publish
-the NPM module and automatically create a GitHub release using the tag
-name for the release and the comment provided on the annotated tag as
-the contents of the release notes.
+[atomist-sdm]: https://github.com/atomist/atomist-sdm (Atomist Software Delivery Machine)
 
 ---
-Created by [Atomist][atomist].
-Need Help?  [Join our Slack team][slack].
 
-[atomist]: https://www.atomist.com/
-[slack]: https://join.atomist.com
+Created by [Atomist][atomist].
+Need Help?  [Join our Slack workspace][slack].
+
+[atomist]: https://atomist.com/ (Atomist - How Teams Deliver Software)
+[slack]: https://join.atomist.com/ (Atomist Community Slack)

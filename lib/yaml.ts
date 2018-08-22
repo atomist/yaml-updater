@@ -1,5 +1,5 @@
 /*
- * Copyright © 2017 Atomist, Inc.
+ * Copyright © 2018 Atomist, Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,8 +14,8 @@
  * limitations under the License.
  */
 
+import * as deepEqual from "fast-deep-equal";
 import * as yaml from "js-yaml";
-import * as _ from "lodash";
 
 export interface Options {
     keepArrayIndent?: boolean;
@@ -63,16 +63,17 @@ export function updateYamlDocumentWithString(
  * @return updated YAML document as a string
  */
 export function updateYamlDocuments(
-    updates: {},
+    updates: { [key: string]: any },
     yamlDocuments: string,
-    options: Options= { keepArrayIndent: false, updateAll: false },
+    options: Options = { keepArrayIndent: false, updateAll: false },
 ): string {
     const yamlSepRegExp = /^(---(?:[ \t]+.*)?\n)/m;
     const yamlDocs = yamlDocuments.split(yamlSepRegExp);
     const insertIndex = (/\S/.test(yamlDocs[0]) || yamlDocs.length === 1) ? 0 : 2;
-    const updateAll = options.updateAll || false;
+    const updateAll = options.updateAll || false;
 
-    _.forIn(updates, (v, k, o) => {
+    for (const k of Object.keys(updates)) {
+        const v = updates[k];
         let found = -1;
         for (let i = 0; i < yamlDocs.length; i += 2) {
             let current: any;
@@ -98,7 +99,7 @@ export function updateYamlDocuments(
             const index = (found < 0) ? insertIndex : found;
             yamlDocs[index] = updateYamlKey(k, v, yamlDocs[index], options);
         }
-    });
+    }
 
     return yamlDocs.join("");
 }
@@ -113,16 +114,18 @@ export function updateYamlDocuments(
  * @return updated YAML document as a string
  */
 export function updateYamlDocument(
-    updates: {},
+    updates: { [key: string]: any },
     currentYaml: string,
     options: Options = { keepArrayIndent: false },
 ): string {
 
-    _.forIn(updates, (v, k, o) => {
-        currentYaml = updateYamlKey(k, v, currentYaml, options);
-    });
+    let updatedYaml = currentYaml;
+    for (const k of Object.keys(updates)) {
+        const v = updates[k];
+        updatedYaml = updateYamlKey(k, v, updatedYaml, options);
+    }
 
-    return currentYaml;
+    return updatedYaml;
 }
 
 /**
@@ -165,7 +168,7 @@ export function updateYamlKey(
         }
     } else if (knownType(value)) {
         if (key in current) {
-            if (_.isEqual(current[key], value)) {
+            if (deepEqual(current[key], value)) {
                 return currentYaml;
             } else if (simpleType(value) || simpleType(current[key])) {
                 const newKeyValue = formatYamlKey(key, value, options);
@@ -191,9 +194,10 @@ export function updateYamlKey(
                     return l.replace(indentRegex, "");
                 });
                 let currentValueYaml = undentedLines.join("\n");
-                _.forIn(value, (v, k, o) => {
+                for (const k of Object.keys(value)) {
+                    const v = value[k];
                     currentValueYaml = updateYamlKey(k, v, currentValueYaml, options);
-                });
+                }
                 const currentLines = currentValueYaml.split("\n");
                 let nextToMatch = 0;
                 const indentedLines = currentLines.map(l => {

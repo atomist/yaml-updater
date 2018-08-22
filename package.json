@@ -1,8 +1,12 @@
 {
   "name": "@atomist/yaml-updater",
-  "description": "update YAML documents while ensuring clean diffs",
+  "description": "Update YAML documents while ensuring clean diffs",
   "version": "0.4.0",
-  "author": "Atomist",
+  "author": {
+    "name": "Atomist",
+    "email": "support@atomist.com",
+    "url": "https://atomist.com/"
+  },
   "license": "Apache-2.0",
   "homepage": "https://github.com/atomist/yaml-updater#readme",
   "repository": {
@@ -11,44 +15,48 @@
   },
   "keywords": [
     "atomist",
-    "rug",
-    "slack"
+    "yaml"
   ],
   "bugs": {
     "url": "https://github.com/atomist/yaml-updater/issues"
   },
+  "main": "./index.js",
+  "types": "./index.d.ts",
   "dependencies": {
-    "js-yaml": "^3.9.1",
-    "lodash": "^4.17.4"
+    "@types/js-yaml": "^3.11.2",
+    "fast-deep-equal": "^2.0.1",
+    "js-yaml": "^3.12.0"
   },
   "devDependencies": {
-    "@types/js-yaml": "^3.9.1",
-    "@types/lodash": "^4.14.73",
-    "@types/mocha": "^2.2.41",
-    "@types/power-assert": "^1.4.29",
-    "espower-typescript": "^8.0.0",
-    "mocha": "^3.4.2",
-    "power-assert": "^1.4.4",
+    "@types/mocha": "^5.2.5",
+    "@types/power-assert": "^1.5.0",
+    "espower-typescript": "^9.0.0",
+    "mocha": "^5.2.0",
+    "npm-run-all": "^4.1.3",
+    "power-assert": "^1.6.0",
     "supervisor": "^0.12.0",
-    "tslint": "^5.6.0",
-    "typedoc": "^0.8.0",
-    "typescript": "^2.5.1",
-    "typescript-formatter": "^6.0.0"
+    "tslint": "^5.11.0",
+    "typedoc": "^0.11.1",
+    "typescript": "^2.9.2"
   },
   "directories": {
     "test": "test"
   },
   "scripts": {
-    "autotest": "supervisor -q -n exit -x npm -- test",
-    "build": "npm run lint && npm run compile && npm test",
-    "clean": "npm run clean-js ; rm -rf build",
-    "clean-js": "find src test -type f -name '*.js' -print0 | xargs -0 rm -f",
-    "compile": "tsc -p .",
-    "distclean": "npm run clean ; rm -rf node_modules",
-    "fmt": "tsfmt --replace",
-    "lint": "tslint --format verbose --project . --exclude '{build,node_modules}/**' '**/*.ts'",
-    "lint-fix": "npm run lint -- --fix",
-    "test": "mocha --compilers ts:espower-typescript/guess 'test/**/*.ts'",
-    "typedoc": "typedoc --mode modules --excludeExternals"
+    "autotest": "supervisor --watch index.ts,lib,test --extensions ts --no-restart-on exit --quiet --exec npm -- test",
+    "build": "run-s compile test lint doc",
+    "clean": "run-p clean:compile clean:doc clean:run",
+    "clean:compile": "rimraf git-info.json \"index.{d.ts,js{,.map}}\" \"{lib,test}/**/*.{d.ts,js{,.map}}\" lib/typings/types.ts",
+    "clean:dist": "run-s clean clean:npm",
+    "clean:doc": "rimraf doc",
+    "clean:npm": "rimraf node_modules",
+    "clean:run": "rimraf *-v8.log profile.txt log",
+    "compile": "tsc --project .",
+    "doc": "typedoc --mode modules --ignoreCompilerErrors --exclude \"**/*.d.ts\" --out doc index.ts lib",
+    "lint": "tslint --format verbose --project . --exclude \"node_modules/**\" --exclude \"**/*.d.ts\" \"**/*.ts\"",
+    "lint:fix": "npm run lint -- --fix",
+    "test": "mocha --require espower-typescript/guess \"test/**/*.test.ts\"",
+    "test:one": "mocha --require espower-typescript/guess \"test/**/${TEST:-*.test.ts}\"",
+    "typedoc": "npm run doc"
   }
 }
