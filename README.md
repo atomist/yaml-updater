@@ -1,5 +1,6 @@
 # @atomist/yaml-updater
 
+[![atomist sdm goals](http://badge.atomist.com/T29E48P34/atomist/yaml-updater/00cff505-6345-430a-b615-382c43c7eb1a)](https://app.atomist.com/workspace/T29E48P34)
 [![npm version](https://img.shields.io/npm/v/@atomist/yaml-updater.svg)](https://www.npmjs.com/package/@atomist/yaml-updater)
 
 [Node][node] [TypeScript][ts] module
