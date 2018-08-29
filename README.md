@@ -15,6 +15,12 @@ transforms][docs].
 
 ## Using
 
+Add this package to your package's dependencies.
+
+```
+$ npm install @atomist/yaml-updater
+```
+
 This module defines and exports several functions for formatting and
 updating YAML.  The published module contains the TypeScript type
 definitions.  To use from TypeScript, import the functions you want to
@@ -133,29 +139,30 @@ If you find a problem, please create an [issue][].
 
 ## Development
 
-You will need to install [node][] to build and test this project.
+You will need to install [Node.js][node] to build and test this
+project.
 
 [node]: https://nodejs.org/ (Node.js)
 
-### Build and Test
+### Build and test
 
-Use the following package scripts to build, test, and perform other
-development tasks.
+Install dependencies.
 
-Command | Reason
-------- | ------
-`npm install` | install project dependencies
-`npm run build` | compile, test, lint, and generate docs
-`npm run lint` | run TSLint against the TypeScript
-`npm run compile` | generate types from GraphQL and compile TypeScript
-`npm test` | run tests
-`npm run autotest` | run tests every time a file changes
-`npm run clean` | remove files generated during the build
+```
+$ npm install
+```
+
+Use the `build` package script to compile, test, lint, and build the
+documentation.
+
+```
+$ npm run build
+```
 
 ### Release
 
-Releases are managed by the [Atomist SDM][atomist-sdm].  Press the
-release button in the Atomist dashboard or Slack.
+Releases are handled via the [Atomist SDM][atomist-sdm].  Just press
+the 'Approve' button in the Atomist dashboard or Slack.
 
 [atomist-sdm]: https://github.com/atomist/atomist-sdm (Atomist Software Delivery Machine)
 
