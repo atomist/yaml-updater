@@ -1,6 +1,6 @@
 # @atomist/yaml-updater
 
-[![npm version](https://badge.fury.io/js/%40atomist%2Fyaml-updater.svg)](https://badge.fury.io/js/%40atomist%2Fyaml-updater)
+[![npm version](https://img.shields.io/npm/v/@atomist/yaml-updater.svg)](https://www.npmjs.com/package/@atomist/yaml-updater)
 
 [Node][node] [TypeScript][ts] module
 [`@atomist/yaml-updater`][yaml-updater] for creating clean changes to
