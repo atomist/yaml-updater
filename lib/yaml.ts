@@ -156,7 +156,7 @@ export function updateYamlKey(
     } catch (e) {
         throw new Error(`failed to parse current YAML '${updatedYaml}': ${(e as Error).message}`);
     }
-    if (current == null) {
+    if (!current) {
         updatedYaml = (updatedYaml === "\n") ? "" : updatedYaml;
         updatedYaml += formatYamlKey(key, value, options);
         return updatedYaml;

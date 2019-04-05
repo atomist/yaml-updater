@@ -122,6 +122,7 @@ security:
 `;
         const updates = {
             level: {
+                // tslint:disable-next-line:no-null-keyword
                 "com.atomist.spring.agent": null,
             },
         };

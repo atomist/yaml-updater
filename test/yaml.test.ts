@@ -24,6 +24,8 @@ import {
     updateYamlKey,
 } from "../lib/yaml";
 
+/* tslint:disable:max-file-line-count */
+
 describe("Yaml", () => {
 
     describe("formatYamlKey", () => {
@@ -143,6 +145,7 @@ artist: Arcade Fire
 artist: Arcade Fire
 `;
             const expected = "label: Merge Records\n";
+            // tslint:disable-next-line:no-null-keyword
             const value = null;
             assert(updateYamlKey("artist", value, original) === expected);
         });
@@ -152,6 +155,7 @@ artist: Arcade Fire
 artist: Arcade Fire
 `;
             const expected = "artist: Arcade Fire\n";
+            // tslint:disable-next-line:no-null-keyword
             const value = null;
             assert(updateYamlKey("label", value, original) === expected);
         });
@@ -216,6 +220,7 @@ albums:
 - Reflektor
 `;
             const expected = "artist: Arcade Fire\n";
+            // tslint:disable-next-line:no-null-keyword
             const value = null;
             assert(updateYamlKey("albums", value, original) === expected);
         });
@@ -229,6 +234,7 @@ albums:
   - Reflektor
 `;
             const expected = "artist: Arcade Fire\n";
+            // tslint:disable-next-line:no-null-keyword
             const value = null;
             assert(updateYamlKey("albums", value, original) === expected);
         });
@@ -303,6 +309,7 @@ label: Merge Records
             const expected = `artist: Arcade Fire
 label: Merge Records
 `;
+            // tslint:disable-next-line:no-null-keyword
             const value = null;
             assert(updateYamlKey("albums", value, original) === expected);
         });
@@ -327,6 +334,7 @@ albums:
   Everything Now: 2017
 label: Merge Records
 `;
+            // tslint:disable-next-line:no-null-keyword
             const value = { "Arcade Fire": null };
             assert(updateYamlKey("albums", value, original) === expected);
         });
@@ -416,6 +424,7 @@ artist: Arcade Fire
 
 label: Merge Records
 `;
+            // tslint:disable-next-line:no-null-keyword
             const value = null;
             assert(updateYamlKey("albums", value, original) === expected);
         });
@@ -450,6 +459,7 @@ albums:
 
 label: Merge Records
 `;
+            // tslint:disable-next-line:no-null-keyword
             const value = { "Arcade Fire": null };
             assert(updateYamlKey("albums", value, original) === expected);
         });
@@ -483,6 +493,7 @@ notify:
   - url: https://somedomain.com
 `;
             const expected = `kanye: west\n`;
+            // tslint:disable-next-line:no-null-keyword
             assert(updateYamlKey("notify", null, orig) === expected);
         });
 
@@ -577,6 +588,7 @@ deploy:
                 cache: {
                     directories: ["$HOME/.m2"],
                 },
+                // tslint:disable-next-line:no-null-keyword
                 deploy: null,
                 install: "nvm install 8.1.2",
                 notifications: {
@@ -674,6 +686,7 @@ deploy:
                 cache: {
                     directories: ["$HOME/.m2"],
                 },
+                // tslint:disable-next-line:no-null-keyword
                 deploy: null,
                 install: "nvm install 8.1.2",
                 notifications: {
@@ -850,6 +863,7 @@ albums:
 - Forgiveness Rock Record
 - Hug of Thunder
 `;
+            // tslint:disable-next-line:no-null-keyword
             const updates = { albums: null };
             const expected = `artist: Arcade Fire
 ---
@@ -1017,8 +1031,10 @@ spring:
                     debug: true,
                     url: `https://webhook.atomist.com/atomist/application/teams/TK421WAYAYP`,
                     environment: {
+                        /* tslint:disable:no-invalid-template-strings */
                         domain: "${DOMAIN:development}",
                         pod: "${HOSTNAME:${random.value}}",
+                        /* tslint:enable:no-invalid-template-strings */
                     },
                 },
             };
