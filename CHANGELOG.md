@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased](https://github.com/atomist/yaml-updater/compare/1.0.0...HEAD)
 
+### Security
+
+-   Update TypeScript and js-yaml packages. [ecb4f91](https://github.com/atomist/yaml-updater/commit/ecb4f913502e927ef5aadc3d67a65b5379fdf5ec)
+
 ## [1.0.0](https://github.com/atomist/yaml-updater/compare/0.4.1...1.0.0) - 2018-08-29
 
 ## [0.4.1](https://github.com/atomist/yaml-updater/compare/0.4.0...0.4.1) - 2018-08-22
@@ -32,20 +36,16 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [0.3.0](https://github.com/atomist/yaml-updater/compare/0.2.0...0.3.0) - 2017-09-13
 
-Pink noise release
-
-### Changed
-
--   Update TypeScript to 2.5.1
-
 ### Added
 
 -   Automatic publication of TypeDoc to gh-pages on release
 -   Option to update all documents at once in a multi documents file [#3](https://github.com/atomist/yaml-updater/issues/3)
 
-## [0.2.0](https://github.com/atomist/yaml-updater/compare/0.1.0...0.2.0) - 2017-08-28
+### Changed
 
-White noise release
+-   Update TypeScript to 2.5.1
+
+## [0.2.0](https://github.com/atomist/yaml-updater/compare/0.1.0...0.2.0) - 2017-08-28
 
 ### Fixed
 
@@ -53,8 +53,6 @@ White noise release
 -   Updating object with trailing spaces [#2](https://github.com/atomist/yaml-updater/issues/2)
 
 ## [0.1.0](https://github.com/atomist/yaml-updater/releases/tag/0.1.0) - 2017-08-18
-
-Initial release
 
 ### Added
 
